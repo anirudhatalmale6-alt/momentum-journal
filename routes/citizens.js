@@ -42,7 +42,7 @@ router.post('/', (req, res) => {
   if (room_id) {
     req.db.prepare("UPDATE rooms SET status = 'occupied' WHERE id = ?").run(room_id);
   }
-  res.redirect('/citizens');
+  res.redirect((process.env.BASE_PATH || '/journal') + '/citizens');
 });
 
 router.get('/:id', (req, res) => {
@@ -54,7 +54,7 @@ router.get('/:id', (req, res) => {
     WHERE c.id = ?
   `).get(req.params.id);
 
-  if (!citizen) return res.redirect('/citizens');
+  if (!citizen) return res.redirect((process.env.BASE_PATH || '/journal') + '/citizens');
 
   const plans = req.db.prepare('SELECT * FROM plans WHERE citizen_id = ?').all(req.params.id);
   const recentDiary = req.db.prepare(`
@@ -74,17 +74,17 @@ router.post('/:id', (req, res) => {
     UPDATE citizens SET first_name=?, last_name=?, date_of_birth=?, room_id=?, department_id=?, admission_date=?, notes=?, status=?
     WHERE id=?
   `).run(first_name, last_name, date_of_birth || null, room_id || null, department_id || null, admission_date || null, notes || null, status || 'active', req.params.id);
-  res.redirect('/citizens/' + req.params.id);
+  res.redirect((process.env.BASE_PATH || '/journal') + '/citizens/' + req.params.id);
 });
 
 router.post('/:id/photo', (req, res, next) => {
   const upload = req.app.locals.uploadPhoto;
   upload.single('photo')(req, res, (err) => {
-    if (err) return res.redirect('/citizens/' + req.params.id);
+    if (err) return res.redirect((process.env.BASE_PATH || '/journal') + '/citizens/' + req.params.id);
     if (req.file) {
       req.db.prepare('UPDATE citizens SET photo_path = ? WHERE id = ?').run('/uploads/photos/' + req.file.filename, req.params.id);
     }
-    res.redirect('/citizens/' + req.params.id);
+    res.redirect((process.env.BASE_PATH || '/journal') + '/citizens/' + req.params.id);
   });
 });
 

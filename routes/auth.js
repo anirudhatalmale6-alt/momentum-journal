@@ -16,12 +16,12 @@ router.post('/login', (req, res) => {
   req.session.username = user.username;
   req.session.fullName = user.full_name;
   req.session.role = user.role;
-  res.redirect('/');
+  res.redirect((process.env.BASE_PATH || '/journal') + '/');
 });
 
 router.get('/logout', (req, res) => {
   req.session.destroy(() => {
-    res.redirect('/login');
+    res.redirect((process.env.BASE_PATH || '/journal') + '/login');
   });
 });
 

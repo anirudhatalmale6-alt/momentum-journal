@@ -3,12 +3,12 @@
   <div class="page-header">
     <h2>Calendar</h2>
     <div class="calendar-nav">
-      <a href="/calendar?date=<%= currentDate %>&nav=prev-month" class="btn btn-secondary btn-sm">&laquo; Month</a>
-      <a href="/calendar?date=<%= currentDate %>&nav=prev-week" class="btn btn-secondary btn-sm">&lsaquo; Week</a>
+      <a href="<%= basePath %>/calendar?date=<%= currentDate %>&nav=prev-month" class="btn btn-secondary btn-sm">&laquo; Month</a>
+      <a href="<%= basePath %>/calendar?date=<%= currentDate %>&nav=prev-week" class="btn btn-secondary btn-sm">&lsaquo; Week</a>
       <span class="current-week"><%= weekStart %> &mdash; <%= weekEnd %></span>
-      <a href="/calendar?date=<%= currentDate %>&nav=next-week" class="btn btn-secondary btn-sm">Week &rsaquo;</a>
-      <a href="/calendar?date=<%= currentDate %>&nav=next-month" class="btn btn-secondary btn-sm">Month &raquo;</a>
-      <a href="/calendar" class="btn btn-secondary btn-sm">Today</a>
+      <a href="<%= basePath %>/calendar?date=<%= currentDate %>&nav=next-week" class="btn btn-secondary btn-sm">Week &rsaquo;</a>
+      <a href="<%= basePath %>/calendar?date=<%= currentDate %>&nav=next-month" class="btn btn-secondary btn-sm">Month &raquo;</a>
+      <a href="<%= basePath %>/calendar" class="btn btn-secondary btn-sm">Today</a>
     </div>
   </div>
 
@@ -42,7 +42,7 @@
                   <div class="event-title"><%= evt.title %></div>
                   <% if (evt.first_name) { %><div class="event-citizen"><%= evt.first_name %> <%= evt.last_name %></div><% } %>
                   <% if (evt.is_private) { %><span class="event-private">Private</span><% } %>
-                  <form method="POST" action="/calendar/<%= evt.id %>/delete?date=<%= currentDate %>" style="display:inline" onsubmit="return confirm('Delete this event?')">
+                  <form method="POST" action="<%= basePath %>/calendar/<%= evt.id %>/delete?date=<%= currentDate %>" style="display:inline" onsubmit="return confirm('Delete this event?')">
                     <button type="submit" class="btn-xs btn-danger">Delete</button>
                   </form>
                 </div>
@@ -114,7 +114,7 @@
       <h3>New Calendar Event</h3>
       <button onclick="document.getElementById('eventModal').style.display='none'" class="modal-close">&times;</button>
     </div>
-    <form method="POST" action="/calendar">
+    <form method="POST" action="<%= basePath %>/calendar">
       <div class="form-group">
         <label>Title</label>
         <input type="text" name="title" required>

@@ -20,7 +20,7 @@ router.get('/:citizenId', (req, res) => {
     SELECT c.*, r.name as room_name FROM citizens c
     LEFT JOIN rooms r ON c.room_id = r.id WHERE c.id = ?
   `).get(req.params.citizenId);
-  if (!citizen) return res.redirect('/diary');
+  if (!citizen) return res.redirect((process.env.BASE_PATH || '/journal') + '/diary');
 
   const entries = req.db.prepare(`
     SELECT de.*, u.full_name as author_name
@@ -37,19 +37,19 @@ router.post('/:citizenId', (req, res) => {
   const { content, category } = req.body;
   req.db.prepare('INSERT INTO diary_entries (citizen_id, author_id, content, category) VALUES (?, ?, ?, ?)')
     .run(req.params.citizenId, req.session.userId, content, category || 'daily');
-  res.redirect('/diary/' + req.params.citizenId);
+  res.redirect((process.env.BASE_PATH || '/journal') + '/diary/' + req.params.citizenId);
 });
 
 router.post('/:citizenId/:id/edit', (req, res) => {
   const { content, category } = req.body;
   req.db.prepare('UPDATE diary_entries SET content=?, category=?, updated_at=CURRENT_TIMESTAMP WHERE id=? AND citizen_id=?')
     .run(content, category || 'daily', req.params.id, req.params.citizenId);
-  res.redirect('/diary/' + req.params.citizenId);
+  res.redirect((process.env.BASE_PATH || '/journal') + '/diary/' + req.params.citizenId);
 });
 
 router.post('/:citizenId/:id/delete', (req, res) => {
   req.db.prepare('DELETE FROM diary_entries WHERE id = ? AND citizen_id = ?').run(req.params.id, req.params.citizenId);
-  res.redirect('/diary/' + req.params.citizenId);
+  res.redirect((process.env.BASE_PATH || '/journal') + '/diary/' + req.params.citizenId);
 });
 
 module.exports = router;

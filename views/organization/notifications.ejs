@@ -2,7 +2,7 @@
 <div class="container">
   <div class="page-header">
     <h2>Notifications</h2>
-    <a href="/organization" class="btn btn-secondary">Back to Organization</a>
+    <a href="<%= basePath %>/organization" class="btn btn-secondary">Back to Organization</a>
   </div>
 
   <div class="notifications-list">
@@ -16,7 +16,7 @@
           <small class="text-muted"><%= n.created_at %></small>
         </div>
         <% if (!n.is_read) { %>
-          <form method="POST" action="/organization/notifications/<%= n.id %>/read">
+          <form method="POST" action="<%= basePath %>/organization/notifications/<%= n.id %>/read">
             <button type="submit" class="btn-xs">Mark Read</button>
           </form>
         <% } %>

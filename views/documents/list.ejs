@@ -25,16 +25,16 @@
         <tr>
           <td>
             <% if (c.photo_path) { %>
-              <img src="<%= c.photo_path %>" class="photo-sm">
+              <img src="<%= basePath %><%= c.photo_path %>" class="photo-sm">
             <% } else { %>
               <div class="photo-sm-placeholder"><%= c.first_name.charAt(0) %><%= c.last_name.charAt(0) %></div>
             <% } %>
           </td>
-          <td><a href="/documents/<%= c.id %>"><%= c.first_name %> <%= c.last_name %></a></td>
+          <td><a href="<%= basePath %>/documents/<%= c.id %>"><%= c.first_name %> <%= c.last_name %></a></td>
           <td><%= c.room_name || '-' %></td>
           <td><%= c.department_name || '-' %></td>
           <td><span class="badge"><%= c.doc_count %></span></td>
-          <td><a href="/documents/<%= c.id %>" class="btn-sm">Open</a></td>
+          <td><a href="<%= basePath %>/documents/<%= c.id %>" class="btn-sm">Open</a></td>
         </tr>
       <% }) %>
     </tbody>

@@ -72,12 +72,12 @@ router.post('/', (req, res) => {
     start_datetime, end_datetime || null, is_private ? 1 : 0, color || '#4CAF50', req.session.userId
   );
   const dateParam = start_datetime ? start_datetime.substring(0, 10) : '';
-  res.redirect('/calendar?date=' + dateParam);
+  res.redirect((process.env.BASE_PATH || '/journal') + '/calendar?date=' + dateParam);
 });
 
 router.post('/:id/delete', (req, res) => {
   req.db.prepare('DELETE FROM calendar_events WHERE id = ?').run(req.params.id);
-  res.redirect('/calendar' + (req.query.date ? '?date=' + req.query.date : ''));
+  res.redirect((process.env.BASE_PATH || '/journal') + '/calendar' + (req.query.date ? '?date=' + req.query.date : ''));
 });
 
 module.exports = router;

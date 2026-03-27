@@ -3,22 +3,22 @@
   <div class="page-header">
     <h2>External Contacts</h2>
     <div>
-      <a href="/organization" class="btn btn-secondary">Back to Organization</a>
+      <a href="<%= basePath %>/organization" class="btn btn-secondary">Back to Organization</a>
       <button onclick="document.getElementById('contactModal').style.display='flex'" class="btn btn-primary">+ Add Contact</button>
     </div>
   </div>
 
   <!-- Alphabetical Filter -->
   <div class="alpha-filter">
-    <a href="/organization/contacts" class="alpha-btn <%= !letter ? 'active' : '' %>">All</a>
+    <a href="<%= basePath %>/organization/contacts" class="alpha-btn <%= !letter ? 'active' : '' %>">All</a>
     <% 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').forEach(l => { %>
-      <a href="/organization/contacts?letter=<%= l %>" class="alpha-btn <%= letter === l ? 'active' : '' %>"><%= l %></a>
+      <a href="<%= basePath %>/organization/contacts?letter=<%= l %>" class="alpha-btn <%= letter === l ? 'active' : '' %>"><%= l %></a>
     <% }) %>
   </div>
 
   <!-- Search and Category -->
   <div class="search-bar">
-    <form method="GET" action="/organization/contacts">
+    <form method="GET" action="<%= basePath %>/organization/contacts">
       <input type="text" name="search" value="<%= search %>" placeholder="Search contacts..." class="search-input">
       <select name="category" class="filter-select">
         <option value="">All Categories</option>
@@ -59,7 +59,7 @@
       <h3>Add Contact</h3>
       <button onclick="document.getElementById('contactModal').style.display='none'" class="modal-close">&times;</button>
     </div>
-    <form method="POST" action="/organization/contacts">
+    <form method="POST" action="<%= basePath %>/organization/contacts">
       <div class="form-group">
         <label>Name *</label>
         <input type="text" name="name" required>

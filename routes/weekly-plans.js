@@ -21,7 +21,7 @@ router.get('/:citizenId', (req, res) => {
     WHERE c.id = ?
   `).get(req.params.citizenId);
 
-  if (!citizen) return res.redirect('/weekly-plans');
+  if (!citizen) return res.redirect((process.env.BASE_PATH || '/journal') + '/weekly-plans');
 
   const plans = req.db.prepare(`
     SELECT wp.*, u.full_name as creator_name
@@ -53,12 +53,12 @@ router.post('/:citizenId', (req, res) => {
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
     `).run(req.params.citizenId, day_of_week, time, activity, plan, work_function, start_date || null, end_date || null, req.session.userId);
   }
-  res.redirect('/weekly-plans/' + req.params.citizenId);
+  res.redirect((process.env.BASE_PATH || '/journal') + '/weekly-plans/' + req.params.citizenId);
 });
 
 router.post('/:citizenId/:id/delete', (req, res) => {
   req.db.prepare('DELETE FROM weekly_plans WHERE id = ? AND citizen_id = ?').run(req.params.id, req.params.citizenId);
-  res.redirect('/weekly-plans/' + req.params.citizenId);
+  res.redirect((process.env.BASE_PATH || '/journal') + '/weekly-plans/' + req.params.citizenId);
 });
 
 module.exports = router;

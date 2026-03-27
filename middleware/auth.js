@@ -8,7 +8,7 @@ function requireAuth(req, res, next) {
     };
     return next();
   }
-  res.redirect('/login');
+  res.redirect((process.env.BASE_PATH || '/journal') + '/login');
 }
 
 function requireAdmin(req, res, next) {

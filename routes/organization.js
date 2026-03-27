@@ -31,7 +31,7 @@ router.post('/rooms/:id', (req, res) => {
     UPDATE rooms SET status=?, offers=?, responsibility=?, preparation_notes=?, reservation_notes=?
     WHERE id=?
   `).run(status, offers || null, responsibility || null, preparation_notes || null, reservation_notes || null, req.params.id);
-  res.redirect('/organization/rooms');
+  res.redirect((process.env.BASE_PATH || '/journal') + '/organization/rooms');
 });
 
 router.get('/contacts', (req, res) => {
@@ -56,7 +56,7 @@ router.post('/contacts', (req, res) => {
   const { name, telephone, mobile, email, secure_email, category, notes } = req.body;
   req.db.prepare('INSERT INTO external_contacts (name, telephone, mobile, email, secure_email, category, notes) VALUES (?, ?, ?, ?, ?, ?, ?)')
     .run(name, telephone || null, mobile || null, email || null, secure_email || null, category || null, notes || null);
-  res.redirect('/organization/contacts');
+  res.redirect((process.env.BASE_PATH || '/journal') + '/organization/contacts');
 });
 
 router.get('/departments', (req, res) => {
@@ -72,7 +72,7 @@ router.get('/departments', (req, res) => {
 router.post('/departments', (req, res) => {
   const { name, description } = req.body;
   req.db.prepare('INSERT INTO departments (name, description) VALUES (?, ?)').run(name, description || null);
-  res.redirect('/organization/departments');
+  res.redirect((process.env.BASE_PATH || '/journal') + '/organization/departments');
 });
 
 router.get('/notifications', (req, res) => {
@@ -82,7 +82,7 @@ router.get('/notifications', (req, res) => {
 
 router.post('/notifications/:id/read', (req, res) => {
   req.db.prepare('UPDATE notifications SET is_read = 1 WHERE id = ? AND user_id = ?').run(req.params.id, req.session.userId);
-  res.redirect('/organization/notifications');
+  res.redirect((process.env.BASE_PATH || '/journal') + '/organization/notifications');
 });
 
 router.get('/gdpr', (req, res) => {

@@ -27,7 +27,7 @@ router.get('/:citizenId', (req, res) => {
     SELECT c.*, r.name as room_name FROM citizens c
     LEFT JOIN rooms r ON c.room_id = r.id WHERE c.id = ?
   `).get(req.params.citizenId);
-  if (!citizen) return res.redirect('/documents');
+  if (!citizen) return res.redirect((process.env.BASE_PATH || '/journal') + '/documents');
 
   const documents = req.db.prepare(`
     SELECT d.*, u.full_name as uploader_name
@@ -46,7 +46,7 @@ router.get('/:citizenId', (req, res) => {
 router.post('/:citizenId/upload', (req, res, next) => {
   const upload = req.app.locals.uploadDoc;
   upload.single('document')(req, res, (err) => {
-    if (err) return res.redirect('/documents/' + req.params.citizenId);
+    if (err) return res.redirect((process.env.BASE_PATH || '/journal') + '/documents/' + req.params.citizenId);
     if (req.file) {
       req.db.prepare(`
         INSERT INTO documents (citizen_id, filename, original_name, file_type, file_size, document_type, uploaded_by)
@@ -57,13 +57,13 @@ router.post('/:citizenId/upload', (req, res, next) => {
         req.body.document_type || 'general', req.session.userId
       );
     }
-    res.redirect('/documents/' + req.params.citizenId);
+    res.redirect((process.env.BASE_PATH || '/journal') + '/documents/' + req.params.citizenId);
   });
 });
 
 router.get('/:citizenId/:id/download', (req, res) => {
   const doc = req.db.prepare('SELECT * FROM documents WHERE id = ? AND citizen_id = ?').get(req.params.id, req.params.citizenId);
-  if (!doc) return res.redirect('/documents/' + req.params.citizenId);
+  if (!doc) return res.redirect((process.env.BASE_PATH || '/journal') + '/documents/' + req.params.citizenId);
   const filePath = path.join(__dirname, '..', 'public', 'uploads', 'documents', doc.filename);
   res.download(filePath, doc.original_name);
 });
@@ -75,7 +75,7 @@ router.post('/:citizenId/:id/delete', (req, res) => {
     try { fs.unlinkSync(filePath); } catch (e) { /* file may not exist */ }
     req.db.prepare('DELETE FROM documents WHERE id = ?').run(req.params.id);
   }
-  res.redirect('/documents/' + req.params.citizenId);
+  res.redirect((process.env.BASE_PATH || '/journal') + '/documents/' + req.params.citizenId);
 });
 
 module.exports = router;

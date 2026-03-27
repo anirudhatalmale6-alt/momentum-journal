@@ -18,7 +18,7 @@ router.get('/:citizenId', (req, res) => {
     SELECT c.*, r.name as room_name FROM citizens c
     LEFT JOIN rooms r ON c.room_id = r.id WHERE c.id = ?
   `).get(req.params.citizenId);
-  if (!citizen) return res.redirect('/year-wheels');
+  if (!citizen) return res.redirect((process.env.BASE_PATH || '/journal') + '/year-wheels');
 
   const year = parseInt(req.query.year) || new Date().getFullYear();
   const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
@@ -42,7 +42,7 @@ router.post('/:citizenId', (req, res) => {
     req.db.prepare('INSERT INTO year_wheels (citizen_id, year, month, content, status) VALUES (?, ?, ?, ?, ?)')
       .run(req.params.citizenId, year, month, content || '', status || 'pending');
   }
-  res.redirect('/year-wheels/' + req.params.citizenId + '?year=' + year);
+  res.redirect((process.env.BASE_PATH || '/journal') + '/year-wheels/' + req.params.citizenId + '?year=' + year);
 });
 
 module.exports = router;

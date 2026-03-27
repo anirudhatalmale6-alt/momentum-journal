@@ -8,6 +8,7 @@ const { requireAuth } = require('./middleware/auth');
 
 const app = express();
 const PORT = 3003;
+const BASE_PATH = process.env.BASE_PATH || '/journal';
 
 // Initialize database
 const db = initializeDatabase();
@@ -47,9 +48,10 @@ const docStorage = multer.diskStorage({
 app.locals.uploadPhoto = multer({ storage: photoStorage, limits: { fileSize: 5 * 1024 * 1024 } });
 app.locals.uploadDoc = multer({ storage: docStorage, limits: { fileSize: 50 * 1024 * 1024 } });
 
-// Make db available in routes
+// Make db and basePath available in routes and views
 app.use((req, res, next) => {
   req.db = db;
+  res.locals.basePath = BASE_PATH;
   next();
 });
 

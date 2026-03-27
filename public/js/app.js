@@ -106,7 +106,8 @@ document.addEventListener('DOMContentLoaded', function() {
   var calendarDateInput = document.getElementById('calendar-date-picker');
   if (calendarDateInput) {
     calendarDateInput.addEventListener('change', function() {
-      window.location.href = '/calendar?date=' + this.value;
+      var bp = document.body.getAttribute('data-base-path') || '/journal';
+      window.location.href = bp + '/calendar?date=' + this.value;
     });
   }
 

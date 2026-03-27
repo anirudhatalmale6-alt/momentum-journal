@@ -27,7 +27,7 @@ router.get('/templates', (req, res) => {
 router.post('/templates', (req, res) => {
   const { name, type, settings, content } = req.body;
   req.db.prepare('INSERT INTO plan_templates (name, type, settings, content) VALUES (?, ?, ?, ?)').run(name, type, settings || 'standard', content || '{}');
-  res.redirect('/plans/templates');
+  res.redirect((process.env.BASE_PATH || '/journal') + '/plans/templates');
 });
 
 router.get('/:citizenId', (req, res) => {
@@ -35,7 +35,7 @@ router.get('/:citizenId', (req, res) => {
     SELECT c.*, r.name as room_name FROM citizens c
     LEFT JOIN rooms r ON c.room_id = r.id WHERE c.id = ?
   `).get(req.params.citizenId);
-  if (!citizen) return res.redirect('/plans');
+  if (!citizen) return res.redirect((process.env.BASE_PATH || '/journal') + '/plans');
 
   const plans = req.db.prepare(`
     SELECT p.*, pt.name as template_name FROM plans p
@@ -56,7 +56,7 @@ router.post('/:citizenId', (req, res) => {
     req.db.prepare('INSERT INTO plans (citizen_id, template_id, name, type, content) VALUES (?, ?, ?, ?, ?)')
       .run(req.params.citizenId, template_id || null, name, type, content || '{}');
   }
-  res.redirect('/plans/' + req.params.citizenId);
+  res.redirect((process.env.BASE_PATH || '/journal') + '/plans/' + req.params.citizenId);
 });
 
 module.exports = router;

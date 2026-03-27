@@ -2,7 +2,7 @@
 <div class="container">
   <div class="page-header">
     <h2>Rooms Management</h2>
-    <a href="/organization" class="btn btn-secondary">Back to Organization</a>
+    <a href="<%= basePath %>/organization" class="btn btn-secondary">Back to Organization</a>
   </div>
 
   <div class="room-summary">
@@ -85,8 +85,9 @@
 </div>
 
 <script>
+var basePath = '<%= basePath %>';
 function editRoom(room) {
-  document.getElementById('roomForm').action = '/organization/rooms/' + room.id;
+  document.getElementById('roomForm').action = basePath + '/organization/rooms/' + room.id;
   document.getElementById('room_status').value = room.status;
   document.getElementById('room_offers').value = room.offers;
   document.getElementById('room_responsibility').value = room.responsibility;

@@ -2,18 +2,18 @@
 <div class="container">
   <div class="page-header">
     <h2>Citizen Profile</h2>
-    <a href="/citizens" class="btn btn-secondary">Back to Citizens</a>
+    <a href="<%= basePath %>/citizens" class="btn btn-secondary">Back to Citizens</a>
   </div>
 
   <div class="profile-layout">
     <div class="profile-sidebar">
       <div class="profile-photo-section">
         <% if (citizen.photo_path) { %>
-          <img src="<%= citizen.photo_path %>" class="photo-lg">
+          <img src="<%= basePath %><%= citizen.photo_path %>" class="photo-lg">
         <% } else { %>
           <div class="photo-lg-placeholder"><%= citizen.first_name.charAt(0) %><%= citizen.last_name.charAt(0) %></div>
         <% } %>
-        <form method="POST" action="/citizens/<%= citizen.id %>/photo" enctype="multipart/form-data" class="photo-upload-form">
+        <form method="POST" action="<%= basePath %>/citizens/<%= citizen.id %>/photo" enctype="multipart/form-data" class="photo-upload-form">
           <input type="file" name="photo" accept="image/*" id="photo-input" class="file-input-hidden">
           <label for="photo-input" class="btn btn-secondary btn-sm">Upload Photo</label>
           <button type="submit" class="btn btn-primary btn-sm">Save Photo</button>
@@ -31,12 +31,12 @@
 
       <div class="profile-links">
         <h4>Quick Links</h4>
-        <a href="/plans/<%= citizen.id %>" class="profile-link">Plans</a>
-        <a href="/diary/<%= citizen.id %>" class="profile-link">Diary</a>
-        <a href="/weekly-plans/<%= citizen.id %>" class="profile-link">Weekly Plans</a>
-        <a href="/documents/<%= citizen.id %>" class="profile-link">Documents</a>
-        <a href="/calendar" class="profile-link">Calendar</a>
-        <a href="/forms/<%= citizen.id %>" class="profile-link">Forms</a>
+        <a href="<%= basePath %>/plans/<%= citizen.id %>" class="profile-link">Plans</a>
+        <a href="<%= basePath %>/diary/<%= citizen.id %>" class="profile-link">Diary</a>
+        <a href="<%= basePath %>/weekly-plans/<%= citizen.id %>" class="profile-link">Weekly Plans</a>
+        <a href="<%= basePath %>/documents/<%= citizen.id %>" class="profile-link">Documents</a>
+        <a href="<%= basePath %>/calendar" class="profile-link">Calendar</a>
+        <a href="<%= basePath %>/forms/<%= citizen.id %>" class="profile-link">Forms</a>
       </div>
     </div>
 
@@ -44,7 +44,7 @@
       <!-- Edit Form -->
       <div class="card">
         <h3>Edit Details</h3>
-        <form method="POST" action="/citizens/<%= citizen.id %>" class="inline-form">
+        <form method="POST" action="<%= basePath %>/citizens/<%= citizen.id %>" class="inline-form">
           <div class="form-row">
             <div class="form-group">
               <label>First Name</label>
@@ -123,7 +123,7 @@
               <p><%= entry.content.substring(0, 200) %><%= entry.content.length > 200 ? '...' : '' %></p>
             </div>
           <% }) %>
-          <a href="/diary/<%= citizen.id %>" class="btn btn-secondary">View All Entries</a>
+          <a href="<%= basePath %>/diary/<%= citizen.id %>" class="btn btn-secondary">View All Entries</a>
         <% } %>
       </div>
     </div>

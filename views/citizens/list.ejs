@@ -2,14 +2,14 @@
 <div class="container">
   <div class="page-header">
     <h2>Citizens</h2>
-    <a href="/citizens/new" class="btn btn-primary">+ Add New Citizen</a>
+    <a href="<%= basePath %>/citizens/new" class="btn btn-primary">+ Add New Citizen</a>
   </div>
 
   <div class="search-bar">
-    <form method="GET" action="/citizens">
+    <form method="GET" action="<%= basePath %>/citizens">
       <input type="text" name="search" value="<%= search %>" placeholder="Search by name..." class="search-input">
       <button type="submit" class="btn btn-primary">Search</button>
-      <% if (search) { %><a href="/citizens" class="btn btn-secondary">Clear</a><% } %>
+      <% if (search) { %><a href="<%= basePath %>/citizens" class="btn btn-secondary">Clear</a><% } %>
     </form>
   </div>
 
@@ -30,19 +30,19 @@
         <tr>
           <td>
             <% if (citizen.photo_path) { %>
-              <img src="<%= citizen.photo_path %>" class="photo-sm">
+              <img src="<%= basePath %><%= citizen.photo_path %>" class="photo-sm">
             <% } else { %>
               <div class="photo-sm-placeholder"><%= citizen.first_name.charAt(0) %><%= citizen.last_name.charAt(0) %></div>
             <% } %>
           </td>
-          <td><a href="/citizens/<%= citizen.id %>"><%= citizen.first_name %> <%= citizen.last_name %></a></td>
+          <td><a href="<%= basePath %>/citizens/<%= citizen.id %>"><%= citizen.first_name %> <%= citizen.last_name %></a></td>
           <td><%= citizen.room_name || '-' %></td>
           <td><%= citizen.department_name || '-' %></td>
           <td><span class="status-badge status-<%= citizen.status %>"><%= citizen.status %></span></td>
           <td><%= citizen.admission_date || '-' %></td>
           <td>
-            <a href="/citizens/<%= citizen.id %>" class="btn-sm">View</a>
-            <a href="/diary/<%= citizen.id %>" class="btn-sm">Diary</a>
+            <a href="<%= basePath %>/citizens/<%= citizen.id %>" class="btn-sm">View</a>
+            <a href="<%= basePath %>/diary/<%= citizen.id %>" class="btn-sm">Diary</a>
           </td>
         </tr>
       <% }) %>

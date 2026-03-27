@@ -4,13 +4,13 @@
     <h2>Diary - <%= citizen.first_name %> <%= citizen.last_name %>
       <% if (citizen.room_name) { %><span class="text-muted">(<%= citizen.room_name %>)</span><% } %>
     </h2>
-    <a href="/diary" class="btn btn-secondary">Back</a>
+    <a href="<%= basePath %>/diary" class="btn btn-secondary">Back</a>
   </div>
 
   <!-- New Entry Form -->
   <div class="card">
     <h3>Add New Entry</h3>
-    <form method="POST" action="/diary/<%= citizen.id %>">
+    <form method="POST" action="<%= basePath %>/diary/<%= citizen.id %>">
       <div class="form-group">
         <label>Category</label>
         <select name="category">
@@ -46,7 +46,7 @@
           </div>
           <div class="entry-actions">
             <button onclick="toggleEdit(<%= entry.id %>)" class="btn-xs">Edit</button>
-            <form method="POST" action="/diary/<%= citizen.id %>/<%= entry.id %>/delete" style="display:inline" onsubmit="return confirm('Delete this entry?')">
+            <form method="POST" action="<%= basePath %>/diary/<%= citizen.id %>/<%= entry.id %>/delete" style="display:inline" onsubmit="return confirm('Delete this entry?')">
               <button type="submit" class="btn-xs btn-danger">Delete</button>
             </form>
           </div>
@@ -55,7 +55,7 @@
           <p><%= entry.content %></p>
         </div>
         <div class="entry-edit" id="edit-<%= entry.id %>" style="display:none">
-          <form method="POST" action="/diary/<%= citizen.id %>/<%= entry.id %>/edit">
+          <form method="POST" action="<%= basePath %>/diary/<%= citizen.id %>/<%= entry.id %>/edit">
             <div class="form-group">
               <select name="category">
                 <option value="daily" <%= entry.category === 'daily' ? 'selected' : '' %>>Daily</option>

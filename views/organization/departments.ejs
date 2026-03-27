@@ -2,7 +2,7 @@
 <div class="container">
   <div class="page-header">
     <h2>Departments</h2>
-    <a href="/organization" class="btn btn-secondary">Back to Organization</a>
+    <a href="<%= basePath %>/organization" class="btn btn-secondary">Back to Organization</a>
   </div>
 
   <table class="data-table">
@@ -23,7 +23,7 @@
 
   <div class="card">
     <h3>Add Department</h3>
-    <form method="POST" action="/organization/departments">
+    <form method="POST" action="<%= basePath %>/organization/departments">
       <div class="form-row">
         <div class="form-group">
           <label>Name *</label>

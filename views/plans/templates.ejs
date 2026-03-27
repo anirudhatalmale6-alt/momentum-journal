@@ -2,7 +2,7 @@
 <div class="container">
   <div class="page-header">
     <h2>Plan Templates</h2>
-    <a href="/plans" class="btn btn-secondary">Back to Plans</a>
+    <a href="<%= basePath %>/plans" class="btn btn-secondary">Back to Plans</a>
   </div>
 
   <div class="card">
@@ -46,7 +46,7 @@
 
   <div class="card">
     <h3>Create New Template</h3>
-    <form method="POST" action="/plans/templates">
+    <form method="POST" action="<%= basePath %>/plans/templates">
       <div class="form-row">
         <div class="form-group">
           <label>Template Name</label>

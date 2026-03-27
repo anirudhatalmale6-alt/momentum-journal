@@ -3,7 +3,7 @@
   <div class="page-header">
     <h2><%= citizen.first_name %> <%= citizen.last_name %> <% if (citizen.room_name) { %><span class="text-muted">(<%= citizen.room_name %>)</span><% } %></h2>
     <div>
-      <a href="/weekly-plans" class="btn btn-secondary">Back</a>
+      <a href="<%= basePath %>/weekly-plans" class="btn btn-secondary">Back</a>
       <button onclick="document.getElementById('activityModal').style.display='flex'" class="btn btn-primary">+ Create Activity</button>
       <button onclick="window.print()" class="btn btn-secondary">Print</button>
     </div>
@@ -29,7 +29,7 @@
                 </div>
                 <div class="activity-actions">
                   <button onclick="editActivity(<%= JSON.stringify(act) %>)" class="btn-xs">Edit</button>
-                  <form method="POST" action="/weekly-plans/<%= citizen.id %>/<%= act.id %>/delete" style="display:inline" onsubmit="return confirm('Delete this activity?')">
+                  <form method="POST" action="<%= basePath %>/weekly-plans/<%= citizen.id %>/<%= act.id %>/delete" style="display:inline" onsubmit="return confirm('Delete this activity?')">
                     <button type="submit" class="btn-xs btn-danger">Delete</button>
                   </form>
                 </div>
@@ -63,7 +63,7 @@
               <td><%= act.end_date || '-' %></td>
               <td>
                 <button onclick="editActivity(<%= JSON.stringify(act) %>)" class="btn-xs">Edit</button>
-                <form method="POST" action="/weekly-plans/<%= citizen.id %>/<%= act.id %>/delete" style="display:inline" onsubmit="return confirm('Delete?')">
+                <form method="POST" action="<%= basePath %>/weekly-plans/<%= citizen.id %>/<%= act.id %>/delete" style="display:inline" onsubmit="return confirm('Delete?')">
                   <button type="submit" class="btn-xs btn-danger">Del</button>
                 </form>
               </td>
@@ -82,7 +82,7 @@
       <h3 id="modalTitle">Create Activity</h3>
       <button onclick="document.getElementById('activityModal').style.display='none'" class="modal-close">&times;</button>
     </div>
-    <form method="POST" action="/weekly-plans/<%= citizen.id %>">
+    <form method="POST" action="<%= basePath %>/weekly-plans/<%= citizen.id %>">
       <input type="hidden" name="plan_id" id="plan_id">
       <div class="form-group">
         <label>Day of Week</label>

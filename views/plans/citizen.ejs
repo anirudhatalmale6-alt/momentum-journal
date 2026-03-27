@@ -4,7 +4,7 @@
     <h2><%= citizen.first_name %> <%= citizen.last_name %> - Plans
       <% if (citizen.room_name) { %><span class="text-muted">(<%= citizen.room_name %>)</span><% } %>
     </h2>
-    <a href="/plans" class="btn btn-secondary">Back</a>
+    <a href="<%= basePath %>/plans" class="btn btn-secondary">Back</a>
   </div>
 
   <div class="card">
@@ -22,7 +22,7 @@
               <td><span class="status-badge status-<%= p.status %>"><%= p.status %></span></td>
               <td><%= p.created_at %></td>
               <td>
-                <form method="POST" action="/plans/<%= citizen.id %>" style="display:inline">
+                <form method="POST" action="<%= basePath %>/plans/<%= citizen.id %>" style="display:inline">
                   <input type="hidden" name="plan_id" value="<%= p.id %>">
                   <input type="hidden" name="name" value="<%= p.name %>">
                   <input type="hidden" name="type" value="<%= p.type %>">
@@ -40,7 +40,7 @@
 
   <div class="card">
     <h3>Create New Plan</h3>
-    <form method="POST" action="/plans/<%= citizen.id %>">
+    <form method="POST" action="<%= basePath %>/plans/<%= citizen.id %>">
       <div class="form-row">
         <div class="form-group">
           <label>Plan Name</label>

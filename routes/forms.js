@@ -20,7 +20,7 @@ router.get('/:citizenId', (req, res) => {
     SELECT c.*, r.name as room_name FROM citizens c
     LEFT JOIN rooms r ON c.room_id = r.id WHERE c.id = ?
   `).get(req.params.citizenId);
-  if (!citizen) return res.redirect('/forms');
+  if (!citizen) return res.redirect((process.env.BASE_PATH || '/journal') + '/forms');
 
   const forms = req.db.prepare(`
     SELECT f.*, u.full_name as creator_name
@@ -37,7 +37,7 @@ router.post('/:citizenId', (req, res) => {
   const { template_name, data, status } = req.body;
   req.db.prepare('INSERT INTO forms (citizen_id, template_name, data, status, created_by) VALUES (?, ?, ?, ?, ?)')
     .run(req.params.citizenId, template_name, data || '{}', status || 'draft', req.session.userId);
-  res.redirect('/forms/' + req.params.citizenId);
+  res.redirect((process.env.BASE_PATH || '/journal') + '/forms/' + req.params.citizenId);
 });
 
 module.exports = router;

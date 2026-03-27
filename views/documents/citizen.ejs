@@ -4,7 +4,7 @@
     <h2>Documents - <%= citizen.first_name %> <%= citizen.last_name %>
       <% if (citizen.room_name) { %><span class="text-muted">(<%= citizen.room_name %>)</span><% } %>
     </h2>
-    <a href="/documents" class="btn btn-secondary">Back</a>
+    <a href="<%= basePath %>/documents" class="btn btn-secondary">Back</a>
   </div>
 
   <div class="storage-indicator">
@@ -17,7 +17,7 @@
   <!-- Upload Section -->
   <div class="card">
     <h3>Upload Document</h3>
-    <form method="POST" action="/documents/<%= citizen.id %>/upload" enctype="multipart/form-data" class="upload-form">
+    <form method="POST" action="<%= basePath %>/documents/<%= citizen.id %>/upload" enctype="multipart/form-data" class="upload-form">
       <div class="form-row">
         <div class="form-group">
           <label>File</label>
@@ -65,8 +65,8 @@
           <td><%= doc.uploader_name || 'Unknown' %></td>
           <td><%= doc.created_at %></td>
           <td>
-            <a href="/documents/<%= citizen.id %>/<%= doc.id %>/download" class="btn-xs">Download</a>
-            <form method="POST" action="/documents/<%= citizen.id %>/<%= doc.id %>/delete" style="display:inline" onsubmit="return confirm('Delete this document?')">
+            <a href="<%= basePath %>/documents/<%= citizen.id %>/<%= doc.id %>/download" class="btn-xs">Download</a>
+            <form method="POST" action="<%= basePath %>/documents/<%= citizen.id %>/<%= doc.id %>/delete" style="display:inline" onsubmit="return confirm('Delete this document?')">
               <button type="submit" class="btn-xs btn-danger">Delete</button>
             </form>
           </td>

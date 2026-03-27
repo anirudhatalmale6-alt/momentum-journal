@@ -4,7 +4,7 @@
     <h2>Forms - <%= citizen.first_name %> <%= citizen.last_name %>
       <% if (citizen.room_name) { %><span class="text-muted">(<%= citizen.room_name %>)</span><% } %>
     </h2>
-    <a href="/forms" class="btn btn-secondary">Back</a>
+    <a href="<%= basePath %>/forms" class="btn btn-secondary">Back</a>
   </div>
 
   <div class="card">
@@ -30,7 +30,7 @@
 
   <div class="card">
     <h3>Submit New Form</h3>
-    <form method="POST" action="/forms/<%= citizen.id %>">
+    <form method="POST" action="<%= basePath %>/forms/<%= citizen.id %>">
       <div class="form-group">
         <label>Form Template</label>
         <select name="template_name" required>

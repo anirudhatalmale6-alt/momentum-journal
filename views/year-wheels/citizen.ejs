@@ -5,10 +5,10 @@
       <% if (citizen.room_name) { %><span class="text-muted">(<%= citizen.room_name %>)</span><% } %>
     </h2>
     <div>
-      <a href="/year-wheels" class="btn btn-secondary">Back</a>
-      <a href="/year-wheels/<%= citizen.id %>?year=<%= year - 1 %>" class="btn btn-secondary">&laquo; <%= year - 1 %></a>
+      <a href="<%= basePath %>/year-wheels" class="btn btn-secondary">Back</a>
+      <a href="<%= basePath %>/year-wheels/<%= citizen.id %>?year=<%= year - 1 %>" class="btn btn-secondary">&laquo; <%= year - 1 %></a>
       <span class="year-display"><%= year %></span>
-      <a href="/year-wheels/<%= citizen.id %>?year=<%= year + 1 %>" class="btn btn-secondary"><%= year + 1 %> &raquo;</a>
+      <a href="<%= basePath %>/year-wheels/<%= citizen.id %>?year=<%= year + 1 %>" class="btn btn-secondary"><%= year + 1 %> &raquo;</a>
     </div>
   </div>
 
@@ -37,7 +37,7 @@
       <h3 id="monthModalTitle">Edit Month</h3>
       <button onclick="document.getElementById('monthModal').style.display='none'" class="modal-close">&times;</button>
     </div>
-    <form method="POST" action="/year-wheels/<%= citizen.id %>">
+    <form method="POST" action="<%= basePath %>/year-wheels/<%= citizen.id %>">
       <input type="hidden" name="year" value="<%= year %>">
       <input type="hidden" name="month" id="edit_month">
       <div class="form-group">
