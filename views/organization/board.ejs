@@ -1,0 +1,18 @@
+<%- include('../partials/header') %>
+<div class="container">
+  <div class="page-header">
+    <h2>Board of Directors</h2>
+    <a href="/organization" class="btn btn-secondary">Back to Organization</a>
+  </div>
+  <% docs.forEach(doc => { %>
+    <div class="card">
+      <h3><%= doc.title %></h3>
+      <p><%= doc.content %></p>
+      <small class="text-muted"><%= doc.created_at %></small>
+    </div>
+  <% }) %>
+  <% if (docs.length === 0) { %>
+    <div class="empty-state"><p>No board documents yet.</p></div>
+  <% } %>
+</div>
+<%- include('../partials/footer') %>

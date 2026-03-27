@@ -1,0 +1,75 @@
+<%- include('../partials/header') %>
+<div class="container">
+  <div class="page-header">
+    <h2><%= citizen.first_name %> <%= citizen.last_name %> - Plans
+      <% if (citizen.room_name) { %><span class="text-muted">(<%= citizen.room_name %>)</span><% } %>
+    </h2>
+    <a href="/plans" class="btn btn-secondary">Back</a>
+  </div>
+
+  <div class="card">
+    <h3>Active Plans</h3>
+    <% if (plans.length === 0) { %>
+      <p class="text-muted">No plans created yet.</p>
+    <% } else { %>
+      <table class="data-table">
+        <thead><tr><th>Plan Name</th><th>Type</th><th>Status</th><th>Created</th><th>Actions</th></tr></thead>
+        <tbody>
+          <% plans.forEach(p => { %>
+            <tr>
+              <td><%= p.name %></td>
+              <td><span class="plan-badge plan-<%= p.type %>"><%= p.type %></span></td>
+              <td><span class="status-badge status-<%= p.status %>"><%= p.status %></span></td>
+              <td><%= p.created_at %></td>
+              <td>
+                <form method="POST" action="/plans/<%= citizen.id %>" style="display:inline">
+                  <input type="hidden" name="plan_id" value="<%= p.id %>">
+                  <input type="hidden" name="name" value="<%= p.name %>">
+                  <input type="hidden" name="type" value="<%= p.type %>">
+                  <input type="hidden" name="content" value="<%= p.content %>">
+                  <input type="hidden" name="status" value="<%= p.status === 'active' ? 'completed' : 'active' %>">
+                  <button type="submit" class="btn-xs"><%= p.status === 'active' ? 'Complete' : 'Reactivate' %></button>
+                </form>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    <% } %>
+  </div>
+
+  <div class="card">
+    <h3>Create New Plan</h3>
+    <form method="POST" action="/plans/<%= citizen.id %>">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Plan Name</label>
+          <input type="text" name="name" required>
+        </div>
+        <div class="form-group">
+          <label>Type</label>
+          <select name="type" required>
+            <option value="residence">Residence</option>
+            <option value="health">Health</option>
+            <option value="safety">Safety</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Template</label>
+          <select name="template_id">
+            <option value="">-- No Template --</option>
+            <% templates.forEach(t => { %>
+              <option value="<%= t.id %>"><%= t.name %> (<%= t.type %>)</option>
+            <% }) %>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Content (JSON)</label>
+        <textarea name="content" rows="4" placeholder='{"goals": "", "actions": ""}'></textarea>
+      </div>
+      <button type="submit" class="btn btn-primary">Create Plan</button>
+    </form>
+  </div>
+</div>
+<%- include('../partials/footer') %>

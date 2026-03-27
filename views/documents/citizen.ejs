@@ -1,0 +1,78 @@
+<%- include('../partials/header') %>
+<div class="container">
+  <div class="page-header">
+    <h2>Documents - <%= citizen.first_name %> <%= citizen.last_name %>
+      <% if (citizen.room_name) { %><span class="text-muted">(<%= citizen.room_name %>)</span><% } %>
+    </h2>
+    <a href="/documents" class="btn btn-secondary">Back</a>
+  </div>
+
+  <div class="storage-indicator">
+    <div class="storage-bar">
+      <div class="storage-used" style="width: <%= Math.min((usedMB / maxMB) * 100, 100) %>%"></div>
+    </div>
+    <span class="storage-text"><%= usedMB %> MB used of <%= maxMB %> MB</span>
+  </div>
+
+  <!-- Upload Section -->
+  <div class="card">
+    <h3>Upload Document</h3>
+    <form method="POST" action="/documents/<%= citizen.id %>/upload" enctype="multipart/form-data" class="upload-form">
+      <div class="form-row">
+        <div class="form-group">
+          <label>File</label>
+          <input type="file" name="document" required>
+        </div>
+        <div class="form-group">
+          <label>Document Type</label>
+          <select name="document_type">
+            <option value="general">General</option>
+            <option value="medical">Medical</option>
+            <option value="legal">Legal</option>
+            <option value="financial">Financial</option>
+            <option value="correspondence">Correspondence</option>
+          </select>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary">Quick Upload</button>
+    </form>
+  </div>
+
+  <!-- Documents Tabs -->
+  <div class="content-tabs">
+    <span class="content-tab active">Documents</span>
+    <span class="content-tab">Documents linked to the person</span>
+  </div>
+
+  <!-- Documents Table -->
+  <table class="data-table">
+    <thead>
+      <tr><th>File</th><th>Type</th><th>Document Type</th><th>Size</th><th>Uploaded By</th><th>Date</th><th>Actions</th></tr>
+    </thead>
+    <tbody>
+      <% if (documents.length === 0) { %>
+        <tr><td colspan="7" class="text-center">No documents uploaded yet.</td></tr>
+      <% } %>
+      <% documents.forEach(doc => { %>
+        <tr>
+          <td>
+            <span class="file-icon file-icon-<%= doc.file_type ? doc.file_type.replace('.', '') : 'unknown' %>"></span>
+            <%= doc.original_name %>
+          </td>
+          <td><%= doc.file_type || '-' %></td>
+          <td><%= doc.document_type || 'general' %></td>
+          <td><%= doc.file_size ? (doc.file_size / 1024).toFixed(1) + ' KB' : '-' %></td>
+          <td><%= doc.uploader_name || 'Unknown' %></td>
+          <td><%= doc.created_at %></td>
+          <td>
+            <a href="/documents/<%= citizen.id %>/<%= doc.id %>/download" class="btn-xs">Download</a>
+            <form method="POST" action="/documents/<%= citizen.id %>/<%= doc.id %>/delete" style="display:inline" onsubmit="return confirm('Delete this document?')">
+              <button type="submit" class="btn-xs btn-danger">Delete</button>
+            </form>
+          </td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</div>
+<%- include('../partials/footer') %>

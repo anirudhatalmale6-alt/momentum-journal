@@ -1,0 +1,87 @@
+<%- include('../partials/header') %>
+<div class="container">
+  <div class="page-header">
+    <h2>Statistics</h2>
+  </div>
+
+  <div class="card">
+    <h3>Period Selection</h3>
+    <form method="GET" action="/statistics" class="stats-form">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Start Date</label>
+          <input type="date" name="start" value="<%= startDate %>" required>
+        </div>
+        <div class="form-group">
+          <label>End Date</label>
+          <input type="date" name="end" value="<%= endDate %>" required>
+        </div>
+        <div class="form-group form-group-btn">
+          <button type="submit" class="btn btn-primary">Calculate Period</button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <% if (startDate && endDate) { %>
+    <% Object.keys(grouped).forEach(deptName => { %>
+      <div class="card">
+        <h3><%= deptName %></h3>
+        <table class="data-table stats-table">
+          <thead>
+            <tr>
+              <th>Citizen</th>
+              <th>Room</th>
+              <th>Performed %</th>
+              <th>Partially performed %</th>
+              <th>Not done %</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% let sumP = 0, sumPar = 0, sumN = 0, count = 0; %>
+            <% grouped[deptName].forEach(s => { %>
+              <% sumP += s.performed; sumPar += s.partial; sumN += s.notDone; count++; %>
+              <tr>
+                <td><%= s.first_name %> <%= s.last_name %></td>
+                <td><%= s.room_name || '-' %></td>
+                <td>
+                  <div class="progress-bar">
+                    <div class="progress-fill progress-green" style="width:<%= s.performed %>%"></div>
+                  </div>
+                  <span><%= s.performed %>%</span>
+                </td>
+                <td>
+                  <div class="progress-bar">
+                    <div class="progress-fill progress-yellow" style="width:<%= s.partial %>%"></div>
+                  </div>
+                  <span><%= s.partial %>%</span>
+                </td>
+                <td>
+                  <div class="progress-bar">
+                    <div class="progress-fill progress-red" style="width:<%= s.notDone %>%"></div>
+                  </div>
+                  <span><%= s.notDone %>%</span>
+                </td>
+              </tr>
+            <% }) %>
+            <% if (count > 0) { %>
+              <tr class="sum-row">
+                <td colspan="2"><strong>Average</strong></td>
+                <td><strong><%= Math.round(sumP / count) %>%</strong></td>
+                <td><strong><%= Math.round(sumPar / count) %>%</strong></td>
+                <td><strong><%= Math.round(sumN / count) %>%</strong></td>
+              </tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+    <% }) %>
+
+    <% if (Object.keys(grouped).length === 0) { %>
+      <div class="empty-state"><p>No data available for the selected period.</p></div>
+    <% } %>
+  <% } else { %>
+    <div class="empty-state"><p>Select a date range and click "Calculate Period" to view statistics.</p></div>
+  <% } %>
+</div>
+<%- include('../partials/footer') %>

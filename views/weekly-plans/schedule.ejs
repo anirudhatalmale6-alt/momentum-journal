@@ -1,0 +1,143 @@
+<%- include('../partials/header') %>
+<div class="container">
+  <div class="page-header">
+    <h2><%= citizen.first_name %> <%= citizen.last_name %> <% if (citizen.room_name) { %><span class="text-muted">(<%= citizen.room_name %>)</span><% } %></h2>
+    <div>
+      <a href="/weekly-plans" class="btn btn-secondary">Back</a>
+      <button onclick="document.getElementById('activityModal').style.display='flex'" class="btn btn-primary">+ Create Activity</button>
+      <button onclick="window.print()" class="btn btn-secondary">Print</button>
+    </div>
+  </div>
+
+  <p class="page-desc">Create and edit activities - Weekly schedule overview</p>
+
+  <div class="weekly-schedule">
+    <% days.forEach((day, i) => { %>
+      <div class="day-column">
+        <div class="day-header day-color-<%= i %>"><%= day %></div>
+        <div class="day-activities">
+          <% if (schedule[i] && schedule[i].length > 0) { %>
+            <% schedule[i].forEach(act => { %>
+              <div class="activity-card">
+                <div class="activity-time"><%= act.time %></div>
+                <div class="activity-name"><%= act.activity %></div>
+                <div class="activity-plan"><%= act.plan || '' %></div>
+                <div class="activity-function"><%= act.work_function || '' %></div>
+                <div class="activity-dates">
+                  <% if (act.start_date) { %><small>From: <%= act.start_date %></small><% } %>
+                  <% if (act.end_date) { %><small>To: <%= act.end_date %></small><% } %>
+                </div>
+                <div class="activity-actions">
+                  <button onclick="editActivity(<%= JSON.stringify(act) %>)" class="btn-xs">Edit</button>
+                  <form method="POST" action="/weekly-plans/<%= citizen.id %>/<%= act.id %>/delete" style="display:inline" onsubmit="return confirm('Delete this activity?')">
+                    <button type="submit" class="btn-xs btn-danger">Delete</button>
+                  </form>
+                </div>
+              </div>
+            <% }) %>
+          <% } else { %>
+            <div class="no-activity">No activities</div>
+          <% } %>
+        </div>
+      </div>
+    <% }) %>
+  </div>
+
+  <!-- Activity Table View -->
+  <div class="card" style="margin-top:20px">
+    <h3>All Activities</h3>
+    <table class="data-table">
+      <thead>
+        <tr><th>Day</th><th>Time</th><th>Activity</th><th>Plan</th><th>Work Function</th><th>Start</th><th>End</th><th>Actions</th></tr>
+      </thead>
+      <tbody>
+        <% days.forEach((day, i) => { %>
+          <% if (schedule[i]) { schedule[i].forEach(act => { %>
+            <tr>
+              <td><%= day %></td>
+              <td><%= act.time %></td>
+              <td><%= act.activity %></td>
+              <td><%= act.plan || '-' %></td>
+              <td><%= act.work_function || '-' %></td>
+              <td><%= act.start_date || '-' %></td>
+              <td><%= act.end_date || '-' %></td>
+              <td>
+                <button onclick="editActivity(<%= JSON.stringify(act) %>)" class="btn-xs">Edit</button>
+                <form method="POST" action="/weekly-plans/<%= citizen.id %>/<%= act.id %>/delete" style="display:inline" onsubmit="return confirm('Delete?')">
+                  <button type="submit" class="btn-xs btn-danger">Del</button>
+                </form>
+              </td>
+            </tr>
+          <% }) } %>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Create/Edit Activity Modal -->
+<div id="activityModal" class="modal" style="display:none">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3 id="modalTitle">Create Activity</h3>
+      <button onclick="document.getElementById('activityModal').style.display='none'" class="modal-close">&times;</button>
+    </div>
+    <form method="POST" action="/weekly-plans/<%= citizen.id %>">
+      <input type="hidden" name="plan_id" id="plan_id">
+      <div class="form-group">
+        <label>Day of Week</label>
+        <select name="day_of_week" id="day_of_week" required>
+          <% days.forEach((d, i) => { %>
+            <option value="<%= i %>"><%= d %></option>
+          <% }) %>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Time</label>
+        <input type="time" name="time" id="act_time" required>
+      </div>
+      <div class="form-group">
+        <label>Activity</label>
+        <input type="text" name="activity" id="act_activity" required>
+      </div>
+      <div class="form-group">
+        <label>Plan</label>
+        <input type="text" name="plan" id="act_plan">
+      </div>
+      <div class="form-group">
+        <label>Work Function</label>
+        <input type="text" name="work_function" id="act_work_function">
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Start Date</label>
+          <input type="date" name="start_date" id="act_start_date">
+        </div>
+        <div class="form-group">
+          <label>End Date</label>
+          <input type="date" name="end_date" id="act_end_date">
+        </div>
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary">Save</button>
+        <button type="button" onclick="document.getElementById('activityModal').style.display='none'" class="btn btn-secondary">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+function editActivity(act) {
+  document.getElementById('modalTitle').textContent = 'Edit Activity';
+  document.getElementById('plan_id').value = act.id;
+  document.getElementById('day_of_week').value = act.day_of_week;
+  document.getElementById('act_time').value = act.time;
+  document.getElementById('act_activity').value = act.activity;
+  document.getElementById('act_plan').value = act.plan || '';
+  document.getElementById('act_work_function').value = act.work_function || '';
+  document.getElementById('act_start_date').value = act.start_date || '';
+  document.getElementById('act_end_date').value = act.end_date || '';
+  document.getElementById('activityModal').style.display = 'flex';
+}
+</script>
+<%- include('../partials/footer') %>

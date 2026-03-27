@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Momentum Journal</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <header class="main-header">
+    <div class="header-top">
+      <div class="brand">
+        <h1 class="brand-title">Momentum Journal</h1>
+        <span class="brand-subtitle">Case Management System</span>
+      </div>
+      <div class="header-user">
+        <% if (typeof user !== 'undefined' && user) { %>
+          <span class="user-name"><strong><%= user.fullName %></strong></span>
+          <span class="user-role">(<%= user.role %>)</span>
+          <a href="/logout" class="header-link">Log out</a>
+        <% } %>
+      </div>
+    </div>
+    <% if (typeof user !== 'undefined' && user) { %>
+    <nav class="main-nav">
+      <div class="primary-tabs">
+        <a href="/" class="tab-primary <%= typeof activeNav !== 'undefined' && activeNav === 'frontpage' ? 'active' : '' %>">The front page</a>
+        <a href="/citizens" class="tab-primary <%= typeof activeNav !== 'undefined' && activeNav === 'citizens' ? 'active' : '' %>">Citizens</a>
+        <a href="/organization" class="tab-primary <%= typeof activeNav !== 'undefined' && activeNav === 'organization' ? 'active' : '' %>">Organization</a>
+        <a href="/statistics" class="tab-primary <%= typeof activeNav !== 'undefined' && activeNav === 'statistics' ? 'active' : '' %>">Statistics</a>
+      </div>
+      <div class="secondary-tabs">
+        <a href="/weekly-plans" class="tab-secondary <%= typeof activeNav !== 'undefined' && activeNav === 'weekly-plans' ? 'active' : '' %>">
+          <span class="tab-label-red">Weekly plans</span>
+        </a>
+        <a href="/plans" class="tab-secondary <%= typeof activeNav !== 'undefined' && activeNav === 'plans' ? 'active' : '' %>">Plans</a>
+        <a href="/diary" class="tab-secondary <%= typeof activeNav !== 'undefined' && activeNav === 'diary' ? 'active' : '' %>">Diary</a>
+        <a href="/forms" class="tab-secondary <%= typeof activeNav !== 'undefined' && activeNav === 'forms' ? 'active' : '' %>">Forms</a>
+        <a href="/year-wheels" class="tab-secondary <%= typeof activeNav !== 'undefined' && activeNav === 'year-wheels' ? 'active' : '' %>">Year's wheels</a>
+        <a href="/calendar" class="tab-secondary <%= typeof activeNav !== 'undefined' && activeNav === 'calendar' ? 'active' : '' %>">Calendar</a>
+        <a href="/documents" class="tab-secondary <%= typeof activeNav !== 'undefined' && activeNav === 'documents' ? 'active' : '' %>">Documents</a>
+      </div>
+    </nav>
+    <% } %>
+  </header>
+  <main class="main-content">

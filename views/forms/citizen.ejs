@@ -1,0 +1,61 @@
+<%- include('../partials/header') %>
+<div class="container">
+  <div class="page-header">
+    <h2>Forms - <%= citizen.first_name %> <%= citizen.last_name %>
+      <% if (citizen.room_name) { %><span class="text-muted">(<%= citizen.room_name %>)</span><% } %>
+    </h2>
+    <a href="/forms" class="btn btn-secondary">Back</a>
+  </div>
+
+  <div class="card">
+    <h3>Submitted Forms</h3>
+    <% if (forms.length === 0) { %>
+      <p class="text-muted">No forms submitted yet.</p>
+    <% } else { %>
+      <table class="data-table">
+        <thead><tr><th>Template</th><th>Status</th><th>Created By</th><th>Date</th></tr></thead>
+        <tbody>
+          <% forms.forEach(f => { %>
+            <tr>
+              <td><%= f.template_name %></td>
+              <td><span class="status-badge status-<%= f.status %>"><%= f.status %></span></td>
+              <td><%= f.creator_name || 'Unknown' %></td>
+              <td><%= f.created_at %></td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    <% } %>
+  </div>
+
+  <div class="card">
+    <h3>Submit New Form</h3>
+    <form method="POST" action="/forms/<%= citizen.id %>">
+      <div class="form-group">
+        <label>Form Template</label>
+        <select name="template_name" required>
+          <option value="Intake Form">Intake Form</option>
+          <option value="Health Assessment">Health Assessment</option>
+          <option value="Risk Assessment">Risk Assessment</option>
+          <option value="Exit Interview">Exit Interview</option>
+          <option value="Progress Report">Progress Report</option>
+          <option value="Incident Report">Incident Report</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Form Data (JSON)</label>
+        <textarea name="data" rows="6" placeholder='{"field1": "value1", "field2": "value2"}'>{}</textarea>
+      </div>
+      <div class="form-group">
+        <label>Status</label>
+        <select name="status">
+          <option value="draft">Draft</option>
+          <option value="submitted">Submitted</option>
+          <option value="approved">Approved</option>
+        </select>
+      </div>
+      <button type="submit" class="btn btn-primary">Submit Form</button>
+    </form>
+  </div>
+</div>
+<%- include('../partials/footer') %>

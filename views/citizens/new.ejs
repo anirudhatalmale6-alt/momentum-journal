@@ -1,0 +1,59 @@
+<%- include('../partials/header') %>
+<div class="container">
+  <div class="page-header">
+    <h2>Add New Citizen</h2>
+    <a href="/citizens" class="btn btn-secondary">Back to Citizens</a>
+  </div>
+
+  <form method="POST" action="/citizens" class="form-card">
+    <div class="form-row">
+      <div class="form-group">
+        <label for="first_name">First Name *</label>
+        <input type="text" id="first_name" name="first_name" required>
+      </div>
+      <div class="form-group">
+        <label for="last_name">Last Name *</label>
+        <input type="text" id="last_name" name="last_name" required>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label for="date_of_birth">Date of Birth</label>
+        <input type="date" id="date_of_birth" name="date_of_birth">
+      </div>
+      <div class="form-group">
+        <label for="admission_date">Admission Date</label>
+        <input type="date" id="admission_date" name="admission_date">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label for="department_id">Department</label>
+        <select id="department_id" name="department_id">
+          <option value="">-- Select --</option>
+          <% departments.forEach(d => { %>
+            <option value="<%= d.id %>"><%= d.name %></option>
+          <% }) %>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="room_id">Room</label>
+        <select id="room_id" name="room_id">
+          <option value="">-- Select --</option>
+          <% rooms.forEach(r => { %>
+            <option value="<%= r.id %>"><%= r.name %></option>
+          <% }) %>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="notes">Notes</label>
+      <textarea id="notes" name="notes" rows="4"></textarea>
+    </div>
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary">Create Citizen</button>
+      <a href="/citizens" class="btn btn-secondary">Cancel</a>
+    </div>
+  </form>
+</div>
+<%- include('../partials/footer') %>

@@ -1,0 +1,79 @@
+<%- include('../partials/header') %>
+<div class="container">
+  <div class="page-header">
+    <h2>Plan Templates</h2>
+    <a href="/plans" class="btn btn-secondary">Back to Plans</a>
+  </div>
+
+  <div class="card">
+    <h3>Existing Templates</h3>
+    <table class="data-table">
+      <thead>
+        <tr><th>Name</th><th>Type</th><th>Settings</th></tr>
+      </thead>
+      <tbody>
+        <% templates.forEach(t => { %>
+          <tr>
+            <td><%= t.name %></td>
+            <td><span class="plan-badge plan-<%= t.type %>"><%= t.type %></span></td>
+            <td><span class="settings-label settings-<%= t.settings %>"><%= t.settings %></span></td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h3>Fast Templates</h3>
+    <div class="template-grid">
+      <div class="template-card">
+        <h4>Health Plan</h4>
+        <p>Standard health assessment and monitoring template</p>
+        <span class="plan-badge plan-health">health</span>
+      </div>
+      <div class="template-card">
+        <h4>Safety Assessment</h4>
+        <p>Risk evaluation and safety planning template</p>
+        <span class="plan-badge plan-safety">safety</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Method Library</h3>
+    <p class="text-muted">Access evidence-based methods and frameworks for plan creation.</p>
+  </div>
+
+  <div class="card">
+    <h3>Create New Template</h3>
+    <form method="POST" action="/plans/templates">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Template Name</label>
+          <input type="text" name="name" required>
+        </div>
+        <div class="form-group">
+          <label>Type</label>
+          <select name="type" required>
+            <option value="residence">Residence</option>
+            <option value="health">Health</option>
+            <option value="safety">Safety</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Settings</label>
+          <select name="settings">
+            <option value="standard">Standard</option>
+            <option value="specific">Specific</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Content (JSON)</label>
+        <textarea name="content" rows="4" placeholder='{"sections": ["Goal", "Actions"]}'></textarea>
+      </div>
+      <button type="submit" class="btn btn-primary">Create Template</button>
+    </form>
+  </div>
+</div>
+<%- include('../partials/footer') %>

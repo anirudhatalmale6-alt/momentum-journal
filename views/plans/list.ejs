@@ -1,0 +1,39 @@
+<%- include('../partials/header') %>
+<div class="container">
+  <div class="page-header">
+    <h2>Plans</h2>
+    <a href="/plans/templates" class="btn btn-secondary">Templates & Settings</a>
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr><th>Photo</th><th>Name</th><th>Room</th><th>Plans</th><th>Actions</th></tr>
+    </thead>
+    <tbody>
+      <% citizens.forEach(c => { %>
+        <tr>
+          <td>
+            <% if (c.photo_path) { %>
+              <img src="<%= c.photo_path %>" class="photo-sm">
+            <% } else { %>
+              <div class="photo-sm-placeholder"><%= c.first_name.charAt(0) %><%= c.last_name.charAt(0) %></div>
+            <% } %>
+          </td>
+          <td><a href="/plans/<%= c.id %>"><%= c.first_name %> <%= c.last_name %></a></td>
+          <td><%= c.room_name || '-' %></td>
+          <td>
+            <% if (c.plans && c.plans.length > 0) { %>
+              <% c.plans.forEach(p => { %>
+                <span class="plan-badge plan-<%= p.type %>"><%= p.name %></span>
+              <% }) %>
+            <% } else { %>
+              <span class="text-muted">No plans</span>
+            <% } %>
+          </td>
+          <td><a href="/plans/<%= c.id %>" class="btn-sm">Manage Plans</a></td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</div>
+<%- include('../partials/footer') %>

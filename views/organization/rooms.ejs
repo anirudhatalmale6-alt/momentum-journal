@@ -1,0 +1,98 @@
+<%- include('../partials/header') %>
+<div class="container">
+  <div class="page-header">
+    <h2>Rooms Management</h2>
+    <a href="/organization" class="btn btn-secondary">Back to Organization</a>
+  </div>
+
+  <div class="room-summary">
+    <span class="room-total"><%= rooms.length %> rooms</span>
+    <span class="status-badge status-occupied"><%= statusCounts.occupied %> Occupied</span>
+    <span class="status-badge status-vacant"><%= statusCounts.vacant %> Vacant</span>
+    <span class="status-badge status-preparation"><%= statusCounts.preparation %> Preparation</span>
+    <span class="status-badge status-no_payment"><%= statusCounts.no_payment %> No Payment</span>
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Status</th>
+        <th>Room</th>
+        <th>Resident</th>
+        <th>Department</th>
+        <th>Offers</th>
+        <th>Responsibility</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% rooms.forEach(room => { %>
+        <tr>
+          <td><span class="status-badge status-<%= room.status %>"><%= room.status %></span></td>
+          <td><strong><%= room.name %></strong></td>
+          <td><%= room.first_name ? room.first_name + ' ' + room.last_name : '-' %></td>
+          <td><%= room.department_name %></td>
+          <td><%= room.offers || '-' %></td>
+          <td><%= room.responsibility || '-' %></td>
+          <td>
+            <button onclick="editRoom(<%= JSON.stringify({id: room.id, status: room.status, offers: room.offers || '', responsibility: room.responsibility || '', preparation_notes: room.preparation_notes || '', reservation_notes: room.reservation_notes || ''}) %>)" class="btn-xs">Edit</button>
+          </td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</div>
+
+<!-- Edit Room Modal -->
+<div id="roomModal" class="modal" style="display:none">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>Edit Room</h3>
+      <button onclick="document.getElementById('roomModal').style.display='none'" class="modal-close">&times;</button>
+    </div>
+    <form method="POST" id="roomForm">
+      <div class="form-group">
+        <label>Status</label>
+        <select name="status" id="room_status">
+          <option value="occupied">Occupied</option>
+          <option value="vacant">Vacant</option>
+          <option value="preparation">Preparation</option>
+          <option value="no_payment">No Payment</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Offers</label>
+        <input type="text" name="offers" id="room_offers">
+      </div>
+      <div class="form-group">
+        <label>Responsibility</label>
+        <input type="text" name="responsibility" id="room_responsibility">
+      </div>
+      <div class="form-group">
+        <label>Preparation Notes</label>
+        <textarea name="preparation_notes" id="room_prep_notes" rows="2"></textarea>
+      </div>
+      <div class="form-group">
+        <label>Reservation Notes</label>
+        <textarea name="reservation_notes" id="room_res_notes" rows="2"></textarea>
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary">Save</button>
+        <button type="button" onclick="document.getElementById('roomModal').style.display='none'" class="btn btn-secondary">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+function editRoom(room) {
+  document.getElementById('roomForm').action = '/organization/rooms/' + room.id;
+  document.getElementById('room_status').value = room.status;
+  document.getElementById('room_offers').value = room.offers;
+  document.getElementById('room_responsibility').value = room.responsibility;
+  document.getElementById('room_prep_notes').value = room.preparation_notes;
+  document.getElementById('room_res_notes').value = room.reservation_notes;
+  document.getElementById('roomModal').style.display = 'flex';
+}
+</script>
+<%- include('../partials/footer') %>

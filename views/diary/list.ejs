@@ -1,0 +1,32 @@
+<%- include('../partials/header') %>
+<div class="container">
+  <div class="page-header">
+    <h2>Diary</h2>
+    <p class="page-desc">Select a citizen to view or add diary entries</p>
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr><th>Photo</th><th>Name</th><th>Room</th><th>Department</th><th>Entries</th><th>Actions</th></tr>
+    </thead>
+    <tbody>
+      <% citizens.forEach(c => { %>
+        <tr>
+          <td>
+            <% if (c.photo_path) { %>
+              <img src="<%= c.photo_path %>" class="photo-sm">
+            <% } else { %>
+              <div class="photo-sm-placeholder"><%= c.first_name.charAt(0) %><%= c.last_name.charAt(0) %></div>
+            <% } %>
+          </td>
+          <td><a href="/diary/<%= c.id %>"><%= c.first_name %> <%= c.last_name %></a></td>
+          <td><%= c.room_name || '-' %></td>
+          <td><%= c.department_name || '-' %></td>
+          <td><span class="badge"><%= c.entry_count %></span></td>
+          <td><a href="/diary/<%= c.id %>" class="btn-sm">View Diary</a></td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</div>
+<%- include('../partials/footer') %>

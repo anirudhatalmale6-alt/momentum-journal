@@ -1,0 +1,185 @@
+<%- include('../partials/header') %>
+<div class="container">
+  <div class="page-header">
+    <h2>Calendar</h2>
+    <div class="calendar-nav">
+      <a href="/calendar?date=<%= currentDate %>&nav=prev-month" class="btn btn-secondary btn-sm">&laquo; Month</a>
+      <a href="/calendar?date=<%= currentDate %>&nav=prev-week" class="btn btn-secondary btn-sm">&lsaquo; Week</a>
+      <span class="current-week"><%= weekStart %> &mdash; <%= weekEnd %></span>
+      <a href="/calendar?date=<%= currentDate %>&nav=next-week" class="btn btn-secondary btn-sm">Week &rsaquo;</a>
+      <a href="/calendar?date=<%= currentDate %>&nav=next-month" class="btn btn-secondary btn-sm">Month &raquo;</a>
+      <a href="/calendar" class="btn btn-secondary btn-sm">Today</a>
+    </div>
+  </div>
+
+  <div class="calendar-actions">
+    <button onclick="document.getElementById('eventModal').style.display='flex'" class="btn btn-primary">+ New Appointment</button>
+  </div>
+
+  <div class="color-legend">
+    <span class="legend-item"><span class="legend-dot" style="background:#4CAF50"></span> New</span>
+    <span class="legend-item"><span class="legend-dot" style="background:#f44336"></span> Private</span>
+    <span class="legend-item"><span class="legend-dot" style="background:#2196F3"></span> You are part of</span>
+    <span class="legend-item"><span class="legend-dot" style="background:#FF9800"></span> Citizens involved</span>
+  </div>
+
+  <!-- Appointments -->
+  <div class="card">
+    <h3>Appointments</h3>
+    <div class="calendar-week">
+      <% days.forEach((day, i) => { %>
+        <div class="calendar-day">
+          <div class="calendar-day-header day-color-<%= i %>">
+            <strong><%= day.label %></strong>
+            <span><%= day.shortDate %></span>
+          </div>
+          <div class="calendar-day-body">
+            <a href="#" onclick="openNewEvent('<%= day.date %>', 'appointment'); return false;" class="new-appointment-link">+ New appointment</a>
+            <% if (eventsByDay[day.date] && eventsByDay[day.date].appointments.length > 0) { %>
+              <% eventsByDay[day.date].appointments.forEach(evt => { %>
+                <div class="calendar-event" style="border-left: 4px solid <%= evt.color || '#4CAF50' %>; <%= evt.is_private ? 'background:#fff0f0;' : '' %>">
+                  <div class="event-time"><%= evt.start_datetime.substring(11, 16) %><% if (evt.end_datetime) { %> - <%= evt.end_datetime.substring(11, 16) %><% } %></div>
+                  <div class="event-title"><%= evt.title %></div>
+                  <% if (evt.first_name) { %><div class="event-citizen"><%= evt.first_name %> <%= evt.last_name %></div><% } %>
+                  <% if (evt.is_private) { %><span class="event-private">Private</span><% } %>
+                  <form method="POST" action="/calendar/<%= evt.id %>/delete?date=<%= currentDate %>" style="display:inline" onsubmit="return confirm('Delete this event?')">
+                    <button type="submit" class="btn-xs btn-danger">Delete</button>
+                  </form>
+                </div>
+              <% }) %>
+            <% } %>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  </div>
+
+  <!-- Activities -->
+  <div class="card">
+    <h3>Activities</h3>
+    <div class="calendar-week">
+      <% days.forEach((day, i) => { %>
+        <div class="calendar-day">
+          <div class="calendar-day-header day-color-<%= i %>">
+            <strong><%= day.label.substring(0, 3) %></strong>
+          </div>
+          <div class="calendar-day-body">
+            <% if (eventsByDay[day.date] && eventsByDay[day.date].activities.length > 0) { %>
+              <% eventsByDay[day.date].activities.forEach(evt => { %>
+                <div class="calendar-event activity-event" style="border-left: 4px solid <%= evt.color || '#2196F3' %>">
+                  <div class="event-time"><%= evt.start_datetime.substring(11, 16) %></div>
+                  <div class="event-title"><%= evt.title %></div>
+                  <% if (evt.first_name) { %><div class="event-citizen"><%= evt.first_name %> <%= evt.last_name %></div><% } %>
+                </div>
+              <% }) %>
+            <% } else { %>
+              <div class="no-events">-</div>
+            <% } %>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  </div>
+
+  <!-- Ad Hoc Activities -->
+  <div class="card">
+    <h3>Ad Hoc Activities</h3>
+    <div class="calendar-week">
+      <% days.forEach((day, i) => { %>
+        <div class="calendar-day">
+          <div class="calendar-day-header day-color-<%= i %>">
+            <strong><%= day.label.substring(0, 3) %></strong>
+          </div>
+          <div class="calendar-day-body">
+            <% if (eventsByDay[day.date] && eventsByDay[day.date].ad_hoc.length > 0) { %>
+              <% eventsByDay[day.date].ad_hoc.forEach(evt => { %>
+                <div class="calendar-event adhoc-event" style="border-left: 4px solid <%= evt.color || '#9C27B0' %>">
+                  <div class="event-title"><%= evt.title %></div>
+                </div>
+              <% }) %>
+            <% } else { %>
+              <div class="no-events">-</div>
+            <% } %>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  </div>
+</div>
+
+<!-- New Event Modal -->
+<div id="eventModal" class="modal" style="display:none">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>New Calendar Event</h3>
+      <button onclick="document.getElementById('eventModal').style.display='none'" class="modal-close">&times;</button>
+    </div>
+    <form method="POST" action="/calendar">
+      <div class="form-group">
+        <label>Title</label>
+        <input type="text" name="title" required>
+      </div>
+      <div class="form-group">
+        <label>Description</label>
+        <textarea name="description" rows="2"></textarea>
+      </div>
+      <div class="form-group">
+        <label>Type</label>
+        <select name="event_type">
+          <option value="appointment">Appointment</option>
+          <option value="activity">Activity</option>
+          <option value="ad_hoc">Ad Hoc</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Citizen (optional)</label>
+        <select name="citizen_id">
+          <option value="">-- None --</option>
+          <% citizens.forEach(c => { %>
+            <option value="<%= c.id %>"><%= c.first_name %> <%= c.last_name %></option>
+          <% }) %>
+        </select>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Start</label>
+          <input type="datetime-local" name="start_datetime" id="evt_start" required>
+        </div>
+        <div class="form-group">
+          <label>End</label>
+          <input type="datetime-local" name="end_datetime" id="evt_end">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Color</label>
+          <select name="color">
+            <option value="#4CAF50">Green (New)</option>
+            <option value="#f44336">Red (Private)</option>
+            <option value="#2196F3">Blue (Participating)</option>
+            <option value="#FF9800">Orange (Citizens)</option>
+            <option value="#9C27B0">Purple</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="checkbox-label">
+            <input type="checkbox" name="is_private" value="1"> Private event
+          </label>
+        </div>
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary">Create Event</button>
+        <button type="button" onclick="document.getElementById('eventModal').style.display='none'" class="btn btn-secondary">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+function openNewEvent(date, type) {
+  document.getElementById('evt_start').value = date + 'T09:00';
+  document.getElementById('evt_end').value = date + 'T10:00';
+  document.getElementById('eventModal').style.display = 'flex';
+}
+</script>
+<%- include('../partials/footer') %>

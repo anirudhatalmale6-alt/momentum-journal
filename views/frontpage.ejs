@@ -1,0 +1,91 @@
+<%- include('partials/header') %>
+<div class="container">
+  <div class="page-header">
+    <h2>The Front Page</h2>
+    <div class="workflow-indicator">
+      <span class="workflow-step">1st receipt</span>
+      <span class="workflow-arrow">&rarr;</span>
+      <span class="workflow-step">2nd comment</span>
+      <span class="workflow-arrow">&rarr;</span>
+      <span class="workflow-step">3rd save</span>
+    </div>
+  </div>
+
+  <!-- Department Selector -->
+  <div class="department-selector">
+    <h3>Select Department</h3>
+    <div class="department-cards">
+      <a href="/" class="dept-card <%= !selectedDepartment ? 'active' : '' %>">
+        <div class="dept-icon">&#127968;</div>
+        <div class="dept-name">All Departments</div>
+      </a>
+      <% departments.forEach(dept => { %>
+        <a href="/?department=<%= dept.id %>" class="dept-card <%= selectedDepartment == dept.id ? 'active' : '' %>">
+          <div class="dept-icon">&#127970;</div>
+          <div class="dept-name"><%= dept.name %></div>
+          <div class="dept-desc"><%= dept.description || '' %></div>
+        </a>
+      <% }) %>
+    </div>
+  </div>
+
+  <!-- Search -->
+  <div class="search-bar">
+    <form method="GET" action="/">
+      <% if (selectedDepartment) { %><input type="hidden" name="department" value="<%= selectedDepartment %>"><% } %>
+      <input type="text" name="search" value="<%= search %>" placeholder="Search citizen by name..." class="search-input">
+      <button type="submit" class="btn btn-primary">Search</button>
+      <% if (search) { %><a href="/<%= selectedDepartment ? '?department=' + selectedDepartment : '' %>" class="btn btn-secondary">Clear</a><% } %>
+    </form>
+  </div>
+
+  <!-- Tabs -->
+  <div class="content-tabs">
+    <a href="/?tab=daily<%= selectedDepartment ? '&department=' + selectedDepartment : '' %>" class="content-tab <%= tab === 'daily' ? 'active' : '' %>">Daily Plan</a>
+    <a href="/?tab=weekly<%= selectedDepartment ? '&department=' + selectedDepartment : '' %>" class="content-tab <%= tab === 'weekly' ? 'active' : '' %>">Weekly Plans</a>
+    <a href="/?tab=stats<%= selectedDepartment ? '&department=' + selectedDepartment : '' %>" class="content-tab <%= tab === 'stats' ? 'active' : '' %>">Statistics</a>
+  </div>
+
+  <!-- Citizens List -->
+  <div class="citizens-grid">
+    <% if (citizens.length === 0) { %>
+      <div class="empty-state">
+        <p>No citizens found<%= search ? ' matching "' + search + '"' : '' %>.</p>
+      </div>
+    <% } %>
+    <% citizens.forEach(citizen => { %>
+      <div class="citizen-card">
+        <div class="citizen-photo-wrap">
+          <% if (citizen.photo_path) { %>
+            <img src="<%= citizen.photo_path %>" alt="<%= citizen.first_name %>" class="citizen-photo">
+          <% } else { %>
+            <div class="citizen-photo-placeholder"><%= citizen.first_name.charAt(0) %><%= citizen.last_name.charAt(0) %></div>
+          <% } %>
+        </div>
+        <div class="citizen-info">
+          <a href="/citizens/<%= citizen.id %>" class="citizen-name"><%= citizen.first_name %> <%= citizen.last_name %></a>
+          <span class="citizen-room"><%= citizen.room_name || 'No room assigned' %></span>
+          <span class="citizen-dept"><%= citizen.department_name || '' %></span>
+        </div>
+        <div class="citizen-actions">
+          <a href="/diary/<%= citizen.id %>" class="btn-sm" title="Diary">Diary</a>
+          <a href="/weekly-plans/<%= citizen.id %>" class="btn-sm" title="Weekly Plans">Plans</a>
+          <a href="/documents/<%= citizen.id %>" class="btn-sm" title="Documents">Docs</a>
+        </div>
+      </div>
+    <% }) %>
+  </div>
+
+  <!-- Upcoming Birthdays -->
+  <% if (birthdays && birthdays.length > 0) { %>
+  <div class="sidebar-section">
+    <h3>Upcoming Birthdays</h3>
+    <ul class="birthday-list">
+      <% birthdays.forEach(b => { %>
+        <li><%= b.first_name %> <%= b.last_name %> &mdash; <%= b.date_of_birth %></li>
+      <% }) %>
+    </ul>
+  </div>
+  <% } %>
+</div>
+<%- include('partials/footer') %>

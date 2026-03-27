@@ -1,0 +1,72 @@
+<%- include('../partials/header') %>
+<div class="container">
+  <div class="page-header">
+    <h2>Year's Wheel - <%= citizen.first_name %> <%= citizen.last_name %>
+      <% if (citizen.room_name) { %><span class="text-muted">(<%= citizen.room_name %>)</span><% } %>
+    </h2>
+    <div>
+      <a href="/year-wheels" class="btn btn-secondary">Back</a>
+      <a href="/year-wheels/<%= citizen.id %>?year=<%= year - 1 %>" class="btn btn-secondary">&laquo; <%= year - 1 %></a>
+      <span class="year-display"><%= year %></span>
+      <a href="/year-wheels/<%= citizen.id %>?year=<%= year + 1 %>" class="btn btn-secondary"><%= year + 1 %> &raquo;</a>
+    </div>
+  </div>
+
+  <div class="year-wheel-grid">
+    <% months.forEach((month, i) => { %>
+      <div class="month-card">
+        <div class="month-header"><%= month %></div>
+        <div class="month-body">
+          <% if (wheelMap[i + 1]) { %>
+            <p><%= wheelMap[i + 1].content || '' %></p>
+            <span class="status-badge status-<%= wheelMap[i + 1].status %>"><%= wheelMap[i + 1].status %></span>
+          <% } else { %>
+            <p class="text-muted">No entry</p>
+          <% } %>
+          <button onclick="editMonth(<%= i + 1 %>, '<%= month %>', '<%= wheelMap[i + 1] ? (wheelMap[i + 1].content || '').replace(/'/g, "\\'") : '' %>', '<%= wheelMap[i + 1] ? wheelMap[i + 1].status : 'pending' %>')" class="btn-xs" style="margin-top:8px">Edit</button>
+        </div>
+      </div>
+    <% }) %>
+  </div>
+</div>
+
+<!-- Edit Month Modal -->
+<div id="monthModal" class="modal" style="display:none">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3 id="monthModalTitle">Edit Month</h3>
+      <button onclick="document.getElementById('monthModal').style.display='none'" class="modal-close">&times;</button>
+    </div>
+    <form method="POST" action="/year-wheels/<%= citizen.id %>">
+      <input type="hidden" name="year" value="<%= year %>">
+      <input type="hidden" name="month" id="edit_month">
+      <div class="form-group">
+        <label>Content</label>
+        <textarea name="content" id="edit_content" rows="4"></textarea>
+      </div>
+      <div class="form-group">
+        <label>Status</label>
+        <select name="status" id="edit_status">
+          <option value="pending">Pending</option>
+          <option value="in_progress">In Progress</option>
+          <option value="completed">Completed</option>
+        </select>
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary">Save</button>
+        <button type="button" onclick="document.getElementById('monthModal').style.display='none'" class="btn btn-secondary">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+function editMonth(month, monthName, content, status) {
+  document.getElementById('monthModalTitle').textContent = 'Edit ' + monthName;
+  document.getElementById('edit_month').value = month;
+  document.getElementById('edit_content').value = content;
+  document.getElementById('edit_status').value = status;
+  document.getElementById('monthModal').style.display = 'flex';
+}
+</script>
+<%- include('../partials/footer') %>

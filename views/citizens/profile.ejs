@@ -1,0 +1,132 @@
+<%- include('../partials/header') %>
+<div class="container">
+  <div class="page-header">
+    <h2>Citizen Profile</h2>
+    <a href="/citizens" class="btn btn-secondary">Back to Citizens</a>
+  </div>
+
+  <div class="profile-layout">
+    <div class="profile-sidebar">
+      <div class="profile-photo-section">
+        <% if (citizen.photo_path) { %>
+          <img src="<%= citizen.photo_path %>" class="photo-lg">
+        <% } else { %>
+          <div class="photo-lg-placeholder"><%= citizen.first_name.charAt(0) %><%= citizen.last_name.charAt(0) %></div>
+        <% } %>
+        <form method="POST" action="/citizens/<%= citizen.id %>/photo" enctype="multipart/form-data" class="photo-upload-form">
+          <input type="file" name="photo" accept="image/*" id="photo-input" class="file-input-hidden">
+          <label for="photo-input" class="btn btn-secondary btn-sm">Upload Photo</label>
+          <button type="submit" class="btn btn-primary btn-sm">Save Photo</button>
+        </form>
+      </div>
+
+      <div class="profile-details">
+        <h3><%= citizen.first_name %> <%= citizen.last_name %></h3>
+        <span class="status-badge status-<%= citizen.status %>"><%= citizen.status %></span>
+        <div class="detail-row"><strong>Room:</strong> <%= citizen.room_name || 'Not assigned' %></div>
+        <div class="detail-row"><strong>Department:</strong> <%= citizen.department_name || 'Not assigned' %></div>
+        <div class="detail-row"><strong>Date of Birth:</strong> <%= citizen.date_of_birth || 'N/A' %></div>
+        <div class="detail-row"><strong>Admission Date:</strong> <%= citizen.admission_date || 'N/A' %></div>
+      </div>
+
+      <div class="profile-links">
+        <h4>Quick Links</h4>
+        <a href="/plans/<%= citizen.id %>" class="profile-link">Plans</a>
+        <a href="/diary/<%= citizen.id %>" class="profile-link">Diary</a>
+        <a href="/weekly-plans/<%= citizen.id %>" class="profile-link">Weekly Plans</a>
+        <a href="/documents/<%= citizen.id %>" class="profile-link">Documents</a>
+        <a href="/calendar" class="profile-link">Calendar</a>
+        <a href="/forms/<%= citizen.id %>" class="profile-link">Forms</a>
+      </div>
+    </div>
+
+    <div class="profile-main">
+      <!-- Edit Form -->
+      <div class="card">
+        <h3>Edit Details</h3>
+        <form method="POST" action="/citizens/<%= citizen.id %>" class="inline-form">
+          <div class="form-row">
+            <div class="form-group">
+              <label>First Name</label>
+              <input type="text" name="first_name" value="<%= citizen.first_name %>" required>
+            </div>
+            <div class="form-group">
+              <label>Last Name</label>
+              <input type="text" name="last_name" value="<%= citizen.last_name %>" required>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Date of Birth</label>
+              <input type="date" name="date_of_birth" value="<%= citizen.date_of_birth || '' %>">
+            </div>
+            <div class="form-group">
+              <label>Admission Date</label>
+              <input type="date" name="admission_date" value="<%= citizen.admission_date || '' %>">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Status</label>
+              <select name="status">
+                <option value="active" <%= citizen.status === 'active' ? 'selected' : '' %>>Active</option>
+                <option value="inactive" <%= citizen.status === 'inactive' ? 'selected' : '' %>>Inactive</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Room ID</label>
+              <input type="number" name="room_id" value="<%= citizen.room_id || '' %>">
+            </div>
+          </div>
+          <input type="hidden" name="department_id" value="<%= citizen.department_id || '' %>">
+          <div class="form-group">
+            <label>Notes</label>
+            <textarea name="notes" rows="3"><%= citizen.notes || '' %></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary">Save Changes</button>
+        </form>
+      </div>
+
+      <!-- Active Plans -->
+      <div class="card">
+        <h3>Active Plans</h3>
+        <% if (plans.length === 0) { %>
+          <p class="text-muted">No plans assigned yet.</p>
+        <% } else { %>
+          <table class="data-table">
+            <thead><tr><th>Plan</th><th>Type</th><th>Status</th></tr></thead>
+            <tbody>
+              <% plans.forEach(p => { %>
+                <tr>
+                  <td><%= p.name %></td>
+                  <td><%= p.type %></td>
+                  <td><span class="status-badge status-<%= p.status %>"><%= p.status %></span></td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        <% } %>
+      </div>
+
+      <!-- Recent Diary Entries -->
+      <div class="card">
+        <h3>Recent Diary Entries</h3>
+        <% if (recentDiary.length === 0) { %>
+          <p class="text-muted">No diary entries yet.</p>
+        <% } else { %>
+          <% recentDiary.forEach(entry => { %>
+            <div class="diary-entry-preview">
+              <div class="entry-meta">
+                <span class="entry-date"><%= entry.created_at %></span>
+                <span class="entry-author">by <%= entry.author_name || 'Unknown' %></span>
+              </div>
+              <p><%= entry.content.substring(0, 200) %><%= entry.content.length > 200 ? '...' : '' %></p>
+            </div>
+          <% }) %>
+          <a href="/diary/<%= citizen.id %>" class="btn btn-secondary">View All Entries</a>
+        <% } %>
+      </div>
+    </div>
+  </div>
+</div>
+<%- include('../partials/footer') %>
